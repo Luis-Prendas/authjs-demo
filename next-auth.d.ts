@@ -7,7 +7,7 @@ declare module 'next-auth' {
     password: string
     role: string
   }
-  interface Session {
+  export interface Session {
     user: User
   }
 }

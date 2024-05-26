@@ -7,7 +7,12 @@ export default async function Page() {
 
   if (!session) return <span>Cargando...</span>
 
-  if (session.user.role !== 'super-admin') return <span>No tienes acceso...</span>
+  if (session.user.role !== 'super-admin') return (
+    <main className="flex flex-col gap-4 justify-center items-center p-4 w-full h-full">
+      <span>No tienes acceso...</span>
+    </main>
+  )
+
   return (
     <main className="flex flex-col gap-4 justify-center items-center p-4 w-full h-full">
       <h1 className="text-3xl font-bold flex justify-center items-center gap-2"><IconLicense />EDITOR DE LICENSIAS</h1>

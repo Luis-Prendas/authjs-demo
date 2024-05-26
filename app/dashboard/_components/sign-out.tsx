@@ -1,8 +1,9 @@
 'use client'
+import { IconLogout } from "@tabler/icons-react";
 import { signOut } from "next-auth/react";
 
-export default function SignOut () {
+export default function SignOut() {
   return (
-    <button className="absolute top-4 right-4" onClick={() => signOut()}>SugnOut</button>
+    <button onClick={() => signOut()}><IconLogout className="h-8 w-8" /></button>
   )
 }
