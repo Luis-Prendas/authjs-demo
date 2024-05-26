@@ -4,8 +4,8 @@ import "./globals.css";
 import { SessionProvider } from "next-auth/react";
 import Link from "next/link";
 import { IconLink } from "@tabler/icons-react";
-import CurrentRole from "./dashboard/_components/current-role";
-import SignOut from "./dashboard/_components/sign-out";
+import CurrentRole from "./components/current-role";
+import SignOut from "./components/sign-out";
 import { auth } from "@/auth";
 
 const inter = Inter({ subsets: ["latin"] });
