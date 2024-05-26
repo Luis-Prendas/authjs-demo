@@ -22,7 +22,7 @@ export default function FormSignIn({session} : Props) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className='p-4 border border-gray-300 bg-white rounded flex flex-col gap-4 justify-center items-center'>
+    <form onSubmit={handleSubmit} className='p-4 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded flex flex-col gap-4 justify-center items-center'>
         <h2 className='text-xl font-bold'>Usuario y Contraseña</h2>
         {errorSignIn && <span className='bg-red-200 text-red-700 px-4 py-2 rounded'>{errorSignIn}</span>}
         {session && <span className='bg-yellow-200 text-yellow-700 px-4 py-2 rounded'>¡Ya existe una sesión iniciada!</span>}
@@ -34,7 +34,7 @@ export default function FormSignIn({session} : Props) {
           <label htmlFor="password">Contraseña</label>
           <input readOnly={session ? true : false} className='px-4 py-2' type="password" required placeholder='abc123456' id='password' name='password' />
         </fieldset>
-        <button disabled={session ? true : false} type='submit' className='px-4 py-2 bg-gray-300 rounded'>Iniciar sesión</button>
+        <button disabled={session ? true : false} type='submit' className='px-4 py-2 bg-gray-300 dark:bg-slate-700 rounded'>Iniciar sesión</button>
       </form>
   )
 }

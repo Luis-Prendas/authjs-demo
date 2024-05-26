@@ -11,21 +11,21 @@ export default function Home() {
       <span className="flex justify-center items-center gap-2 text-green-700 bg-green-200 px-4 py-2 rounded">
         Desarrollado con Next.js + Auth.js
       </span>
-      <p className="w-[450px] text-center p-4 bg-gray-300 rounded">
+      <p className="w-[450px] text-center p-4 bg-gray-300 dark:bg-slate-800 rounded">
         Demostración de inicio y cierre de sesión con nombre de usuario y contraseña, utilizando roles y permisos en Next.js y Auth.js con TypeScript.
       </p>
       <ul className="flex justify-center items-center">
-        <li className="hover:bg-zinc-300 rounded-full p-2 transition opacity-40 hover:opacity-100">
+        <li className="hover:bg-zinc-300 hover:dark:bg-slate-800 rounded-full p-2 transition opacity-40 hover:opacity-100">
           <Link href="https://www.linkedin.com/in/luisprendasdev/" target="_blank">
             <IconBrandLinkedin />
           </Link>
         </li>
-        <li className="hover:bg-zinc-300 rounded-full p-2 transition opacity-40 hover:opacity-100">
+        <li className="hover:bg-zinc-300 hover:dark:bg-slate-800 rounded-full p-2 transition opacity-40 hover:opacity-100">
           <Link href="https://github.com/Luis-Prendas/authjs-demo/" target="_blank">
             <IconBrandGithub />
           </Link>
         </li>
-        <li className="hover:bg-zinc-300 rounded-full p-2 transition opacity-40 hover:opacity-100">
+        <li className="hover:bg-zinc-300 hover:dark:bg-slate-800 rounded-full p-2 transition opacity-40 hover:opacity-100">
           <Link href="https://porfolio-luis-prendas.vercel.app/" target="_blank">
             <IconWorldWww />
           </Link>

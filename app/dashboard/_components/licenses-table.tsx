@@ -63,20 +63,19 @@ export default function LicensesTable() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4 justify-center items-center p-4 rounded bg-white border border-gray-300">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4 justify-center items-center p-4 w-96 rounded bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-600">
       {USERS.map(user => (
-        <div key={user.id} className="flex flex-col justify-center items-start">
+        <div key={user.id} className="flex flex-col justify-center items-start w-full">
           <label>{user.access.role}</label>
           <Select
             isMulti
             options={OPTIONS}
-            className="basic-multi-select"
-            classNamePrefix="select"
+            className="w-full"
             onChange={(selectedOptions) => handleChange(selectedOptions as MultiValue<{ label: string, value: string }>, user.id!)}
           />
         </div>
       ))}
-      <button className='px-4 py-2 bg-gray-300 rounded' type="submit">Actualizar</button>
+      <button className='px-4 py-2 bg-gray-300 dark:bg-slate-700 rounded' type="submit">Actualizar</button>
     </form>
   );
 }
