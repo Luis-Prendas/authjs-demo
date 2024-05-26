@@ -1,88 +1,82 @@
 'use client'
-import { License, useLicensesStore } from "@/stores/useStore"
+import { LICENSES, License, Role, USERS } from "@/lib/users";
+import { useLicensesStore } from "@/stores/useStore";
+import { User } from "next-auth";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Select, { MultiValue } from 'react-select';
 
+const OPTIONS = [
+  { value: 'transactions', label: 'Transacciones' },
+  { value: 'deposits', label: 'Depositos' },
+  { value: 'Withdrawals', label: 'Retiros' },
+  { value: 'editLicenses', label: 'Editar Licensias' },
+]
+
 export default function LicensesTable() {
-  const { licenses, updateLicenses } = useLicensesStore()
+  const { users, updateUserLicenses } = useLicensesStore();
+  const [newLicenseUser, setNewLicenseUser] = useState<User[]>([]);
+  const router = useRouter()
 
-  const [licensesUsers, setLicensesUsers] = useState<License[]>([])
+  const handleChange = (selectedOptions: MultiValue<{ label: string, value: string }>, userId: string) => {
+    const newLicenses: License[] = [];
+    selectedOptions.forEach(e => {
+      const findLicenseInfo = LICENSES.find(i => i.licenseName === e.value);
+      newLicenses.push({
+        description: findLicenseInfo?.description!,
+        displayName: e.label,
+        licenseName: e.value,
+        route: findLicenseInfo?.route!
+      });
+    });
 
-  const options = Object.keys(licenses[0].licenses).map(license => {
-    return {
-      label: license,
-      value: license,
-    };
-  });
+    const existNewLicenseUserIndex = newLicenseUser.findIndex(e => e.id === userId);
 
-  const handleChange = (selectedOptions: MultiValue<{ label: string, value: string }>, index: number) => {
-    let role: string;
-
-    if (index === 1) {
-      role = 'user';
-    } else if (index === 2) {
-      role = 'admin';
-    } else if (index === 3) {
-      role = 'super-admin';
-    } else {
-      return;
-    }
-
-    const existingFormatIndex = licensesUsers.findIndex(format => format.role === role);
-
-    if (existingFormatIndex !== -1) {
-      const updatedFormat = {
-        ...licensesUsers[existingFormatIndex],
-        licenses: {
-          transacciones: selectedOptions.find(e => e.label === 'transacciones') ? true : false,
-          depositos: selectedOptions.find(e => e.label === 'depositos') ? true : false,
-          retiros: selectedOptions.find(e => e.label === 'retiros') ? true : false,
-          editLicenses: selectedOptions.find(e => e.label === 'editLicenses') ? true : false
+    if (existNewLicenseUserIndex === -1) {
+      const newUser: User = {
+        id: userId,
+        password: '',
+        username: '',
+        access: {
+          role: Role.Null,
+          licenses: newLicenses
         }
       };
-
-      setLicensesUsers(prev => [
-        ...prev.slice(0, existingFormatIndex),
-        updatedFormat,
-        ...prev.slice(existingFormatIndex + 1)
-      ]);
+      setNewLicenseUser(prev => [...prev, newUser]);
     } else {
-      const newFormat: License = {
-        role,
-        licenses: {
-          transacciones: selectedOptions.find(e => e.label === 'transacciones') ? true : false,
-          depositos: selectedOptions.find(e => e.label === 'depositos') ? true : false,
-          retiros: selectedOptions.find(e => e.label === 'retiros') ? true : false,
-          editLicenses: selectedOptions.find(e => e.label === 'editLicenses') ? true : false
+      const updatedUsers = [...newLicenseUser];
+      updatedUsers[existNewLicenseUserIndex] = {
+        ...updatedUsers[existNewLicenseUserIndex],
+        access: {
+          ...updatedUsers[existNewLicenseUserIndex].access,
+          licenses: newLicenses
         }
       };
-
-      setLicensesUsers(prev => [...prev, newFormat]);
+      setNewLicenseUser(updatedUsers);
     }
-  }
+  };
 
-  console.log(licensesUsers)
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    updateLicenses(licensesUsers)
-  }
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    updateUserLicenses(newLicenseUser)
+    router.push('/dashboard')
+  };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4 justify-center items-center">
-      {Array.from({ length: 3 }).map((_, index) => (
-        <Select
-          key={`a${index + 1}`}
-          id={`a${index + 1}`}
-          name={`a${index + 1}`}
-          isMulti
-          options={options}
-          className="basic-multi-select"
-          classNamePrefix="select"
-          onChange={(selectedOptions) => handleChange(selectedOptions as MultiValue<{ label: string, value: string }>, index + 1)}
-        />
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4 justify-center items-center p-4 rounded bg-white border border-gray-300">
+      {USERS.map(user => (
+        <div key={user.id} className="flex flex-col justify-center items-start">
+          <label>{user.access.role}</label>
+          <Select
+            isMulti
+            options={OPTIONS}
+            className="basic-multi-select"
+            classNamePrefix="select"
+            onChange={(selectedOptions) => handleChange(selectedOptions as MultiValue<{ label: string, value: string }>, user.id!)}
+          />
+        </div>
       ))}
-      <button type="submit">Actualizar</button>
+      <button className='px-4 py-2 bg-gray-300 rounded' type="submit">Actualizar</button>
     </form>
   );
 }

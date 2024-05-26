@@ -1,6 +1,6 @@
 import NextAuth, { type NextAuthConfig } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
-import { findByUsername } from './lib/users'
+import { Access, findByUsername } from './lib/users'
 
 interface Credentials {
   username: string
@@ -33,7 +33,7 @@ export const authConfig = {
           id: user.id,
           username: user.username,
           password: user.password,
-          role: user.role
+          access: user.access
         }
 
         return response
@@ -45,7 +45,7 @@ export const authConfig = {
       if (user) {
         token.id = user.id
         token.username = user.username
-        token.role = user.role
+        token.access = user.access
       }
       return token
     },
@@ -53,7 +53,7 @@ export const authConfig = {
       if (session.user) {
         session.user.id = token.id as string
         session.user.username = token.username as string
-        session.user.role = token.role as string
+        session.user.access = token.access as Access
       }
       return session
     },

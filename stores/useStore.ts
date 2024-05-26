@@ -1,37 +1,26 @@
+import { License, USERS } from '@/lib/users';
+import { User } from 'next-auth';
 import { create } from 'zustand'
 import { persist, devtools } from 'zustand/middleware'
 
-interface LicenseDetails {
-  [license: string]: boolean;
-}
-
-export interface License {
-  role: string,
-  licenses: LicenseDetails
-}
-
 interface State {
-  licenses: License[]
-  getLicenses: (userRole: string) => License | null
-  updateLicenses: (licenses: License[]) => void
+  users: User[]
+  getLicenses: (userId: string) => License[] | null
+  updateUserLicenses: (users: User[]) => void
 }
 
 export const useLicensesStore = create<State>()(devtools(persist((set, get) => {
   return {
-    licenses: [
-      { role: 'user', licenses: { transacciones: true, depositos: true, retiros: false, editLicenses: false } },
-      { role: 'admin', licenses: { transacciones: true, depositos: true, retiros: true, editLicenses: false } },
-      { role: 'super-admin', licenses: { transacciones: true, depositos: true, retiros: true, editLicenses: true } },
-    ],
+    users: USERS,
 
-    getLicenses: (userRole: string) => {
-      const { licenses } = get()
-      const license = licenses.find(e => e.role === userRole)
-      return license || null
+    getLicenses: (userId: string) => {
+      const { users } = get()
+      const licenses = users.find(e => e.id === userId)?.access.licenses
+      return licenses || null
     },
 
-    updateLicenses: (licenses: License[]) => {
-      set({ licenses })
+    updateUserLicenses: (users: User[]) => {
+      set({ users })
     }
   }
 }, {

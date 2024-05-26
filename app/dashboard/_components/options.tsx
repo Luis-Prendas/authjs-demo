@@ -1,37 +1,30 @@
 'use client'
-import { License, useLicensesStore } from "@/stores/useStore";
+import { License } from "@/lib/users";
+import { useLicensesStore } from "@/stores/useStore";
+import { IconChevronRight } from "@tabler/icons-react";
 import Link from "next/link";
 import { useState } from "react";
 
 interface Props {
-  sessionRole: string
+  userId: string
 }
 
-export default function Options({ sessionRole }: Props) {
+export default function Options({ userId }: Props) {
   const { getLicenses } = useLicensesStore()
-  const [license, setLicense] = useState<License | null>(getLicenses(sessionRole))
+  const [licenses] = useState(getLicenses(userId))
 
   return (
     <>
-      {license ? (
-        <ul className="flex flex-col gap-4 justify-center items-center">
-          {license.licenses.transacciones && (
-            <li>Transacciones</li>
-          )}
-          {license.licenses.depositos && (
-            <li>Depositos</li>
-          )}
-          {license.licenses.retiros && (
-            <li>Retiros</li>
-          )}
-          {license.licenses.editLicenses && (
-            <li>
-              <Link href='/dashboard/edit-license'>Editar Licensias</Link>
+      {licenses ? (
+        <ul className="flex flex-col gap-4 justify-center items-center p-4 rounded border border-gray-300 bg-white">
+          {licenses.map(license => (
+            <li key={license.licenseName} className="w-44">
+              <Link href={license.route} className="flex justify-start items-center w-full"><IconChevronRight />{license.displayName}</Link>
             </li>
-          )}
+          ))}
         </ul>
       ) : (
-        <span>Cargando...</span>
+        <span>No tienes licencias...</span>
       )}
     </>
   )
